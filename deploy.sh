@@ -14,7 +14,7 @@ cd dist
 
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m 'added vuex'
 
 # если вы публикуете по адресу https://<USERNAME>.github.io
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
