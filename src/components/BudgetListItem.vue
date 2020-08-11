@@ -11,20 +11,32 @@
       </span>
     </template>
     <span class="budget-comment">{{ listItem.comment }}</span>
-    <span class="budget-value" :style="{ color: textColor }">{{ listItem.value }}</span>
-    <ElButton type="danger" size="mini" @click="dialogVisible = true">{{ deleteButtonText }}</ElButton>
-    <ElDialog :title="dialogTitle" :visible.sync="dialogVisible" custom-class="dialog-container">
+    <span class="budget-value" :style="{ color: textColor }">{{
+      listItem.value
+    }}</span>
+    <ElButton type="danger" size="mini" @click="dialogVisible = true">{{
+      deleteButtonText
+    }}</ElButton>
+    <ElDialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      custom-class="dialog-container"
+    >
       <span>{{ dialogConfirmation }}</span>
       <span slot="footer" class="dialog-footer">
-        <ElButton @click="dialogVisible = false">{{ dialogButtonCancel }}</ElButton>
-        <ElButton type="primary" @click="removeItem(listItem.id)">{{ dialogButtonConfirm }}</ElButton>
+        <ElButton @click="dialogVisible = false">{{
+          dialogButtonCancel
+        }}</ElButton>
+        <ElButton type="primary" @click="removeItem(listItem.id)">{{
+          dialogButtonConfirm
+        }}</ElButton>
       </span>
     </ElDialog>
   </div>
 </template>
 
 <script>
-import EventBus from "../event-bus";
+import { mapActions } from "vuex";
 
 export default {
   name: "BudgetListItem",
@@ -42,9 +54,10 @@ export default {
     dialogButtonConfirm: "Confirm",
   }),
   methods: {
+    ...mapActions("budget", ["deleteTransaction"]),
     removeItem(id) {
       this.dialogVisible = false;
-      EventBus.$emit("remove-item", id);
+      this.deleteTransaction(id);
     },
   },
   computed: {

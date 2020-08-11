@@ -6,13 +6,17 @@
           <span>{{ header }}</span>
           <BudgetSortMenu @sort-list="sortList" />
         </div>
-        <BudgetListItem v-for="(item, prop) in filterList" :key="prop" :listItem="item" />
+        <BudgetListItem
+          v-for="(item, prop) in transactionsFilteredList"
+          :key="prop"
+          :listItem="item"
+        />
       </template>
       <template v-else>
         <div slot="header" class="clearfix">
           <span>{{ header }}</span>
         </div>
-        <ElAlert type="info" :title="title" :closable="false" />
+        <ElAlert type="info" :title="titleEmpty" :closable="false" />
       </template>
     </ElCard>
   </div>
@@ -21,49 +25,26 @@
 <script>
 import BudgetListItem from "./BudgetListItem.vue";
 import BudgetSortMenu from "./BudgetSortMenu.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "BudgetList",
   components: { BudgetListItem, BudgetSortMenu },
-  props: {
-    list: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   data: () => ({
     header: "Budget List",
-    title: "Empty List",
-    filterList: null,
-    sortName: "INCOME",
+    titleEmpty: "Empty List",
   }),
   methods: {
+    ...mapActions("budget", ["changeSortingName"]),
     sortList(sortName) {
-      if (sortName !== "ALL") {
-        this.sortName = sortName;
-        return (this.filterList = this.sort);
-      }
-
-      return (this.filterList = this.list);
+      return this.changeSortingName(sortName);
     },
   },
   computed: {
+    ...mapGetters("budget", ["transactionsList", "transactionsFilteredList"]),
     isNotEmpty() {
-      return Boolean(Object.keys(this.list).length);
+      return Boolean(Object.keys(this.transactionsList).length);
     },
-    sort() {
-      let result = {};
-      for (let item in this.list) {
-        let sort = this.list[item];
-        if (this.list[item].type === this.sortName) {
-          result[item] = sort;
-        }
-      }
-      return result;
-    },
-  },
-  created() {
-    this.filterList = this.list;
   },
 };
 </script>

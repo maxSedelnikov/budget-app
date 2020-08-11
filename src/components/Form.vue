@@ -2,7 +2,11 @@
   <ElCard class="form-card">
     <ElForm :model="formData" status-icon :rules="rules" ref="addItemForm">
       <ElFormItem label="Type" prop="type">
-        <ElSelect class="type-select" v-model="formData.type" :placeholder="selectPlaceHolder">
+        <ElSelect
+          class="type-select"
+          v-model="formData.type"
+          :placeholder="selectPlaceHolder"
+        >
           <ElOption label="Income" value="INCOME" />
           <ElOption label="Outcome" value="OUTCOME" />
         </ElSelect>
@@ -19,6 +23,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "Form",
   data() {
@@ -68,10 +74,11 @@ export default {
     };
   },
   methods: {
+    ...mapActions("budget", ["addNewTransaction"]),
     onSubmit() {
       this.$refs.addItemForm.validate((valid) => {
         if (valid) {
-          this.$emit("submit-form", { ...this.formData });
+          this.addNewTransaction(this.formData);
           this.$refs.addItemForm.resetFields();
         }
       });
